@@ -1,4 +1,4 @@
-package main
+package ipc
 
 
 /**
@@ -6,18 +6,17 @@ package main
  */
 type SendInfo struct {
 	data []byte`json:"data"`
+
 }
-/**
+/**1
 主节点给从节点发送消息
  */
-func (sendInfo *SendInfo)send(){
-	for addr, conn:=range connMap{
+func (sendInfo *SendInfo)Send(){
+	for addr, conn:=range ConnMap{
 		if(addr==""){
 
 		}
 		conn.Write(sendInfo.data)
 	}
 }
-func main() {
-	
-}
+
