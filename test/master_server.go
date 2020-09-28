@@ -2,8 +2,8 @@ package main
 
 import (
 	"hqc/consistency"
+	"hqc/global"
 	"hqc/ipc"
-	"time"
 )
 type String string
 
@@ -13,31 +13,32 @@ func (d String) Len() int {
 func main() {
 	go master_client()
 	ipc.Accept()
-
 }
 /**
 master  同步数据到slave  测试
  */
 func master_client(){
+	var identifier []interface{}
 
-	ticker := time.NewTicker(5 * time.Second)
-	for {
-		select {
-		case  <-ticker.C:
-			//var list list.List
-			//cache_map := make(map[string]lru.Value)
-			//cache_map["key1"]=String("value1")
-			var identifier []interface{}
-			bytes := append(identifier, "key1", "value1")
+	//global.CH<-identifier
+	serialization := consistency.New_Cache_data_serialization(identifier)
+	go tesr(*serialization)
+	 serialization.TimerSendInfoToSlave()
+	//list2 := serialization.GetCacheList()
 
-			//list.PushBack("key1")
-			//list.PushBack("value1")
-			//[5]consistency.List_ele{ele}
-			//fmt.Print("来了===========",list)
-			//marshal, _ := json.Marshal(bytes)
-			serialization := consistency.New_Cache_data_serialization(bytes)
-
-			serialization.Write_slave()
-		}
-	}
+	//serialization.TimerSendInfoToSlave()
 }
+
+func tesr(serialization consistency.Cache_data_serialization){
+	var identifier2 []interface{}
+	identifier2 = append(identifier2, "key4", "value4")
+	global.CH<-identifier2
+	//serialization.Cache_list=identifier2
+	var identifier3 []interface{}
+	identifier3 = append(identifier3, "key5", "value5")
+	global.CH<-identifier3
+	//identifier2 = append(identifier2, "key6", "value6")
+	//global.CH<-identifier2
+
+}
+

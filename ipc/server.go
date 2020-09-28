@@ -8,7 +8,6 @@ import (
 )
 var(
 	ConnMap=make(map[string]net.Conn)
-	//conn_ch =make(chan map[string]net.Conn)
 )
 func GetConnMap() map[string]net.Conn{
 	return ConnMap
@@ -35,7 +34,7 @@ func Accept(){
 }
 
 /**
-保存从节点的conn信息
+保存slave节点的conn信息
  */
 func handleConn(conn net.Conn){
 	addr := conn.RemoteAddr().String()
@@ -53,7 +52,6 @@ func handleConn(conn net.Conn){
 			delete(ConnMap,conn.RemoteAddr().String())
 			return
 		}
-		fmt.Print("nnnn=",n)
 		receive_msg_ch := make(chan byte)
 		Data := buffer[:n]
 		go GravelChannel(Data,receive_msg_ch)
@@ -81,6 +79,3 @@ func HeartBeating(conn net.Conn,timeout int,receive_msg_ch chan byte){
 		}
 }
 
-func main(){
-	Accept()
-}
